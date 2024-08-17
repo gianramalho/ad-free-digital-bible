@@ -52,9 +52,9 @@ export default function BookDetail() {
     const [data, setData] = useState<ChapterData | null>(null);
     const [chapters, setChapters] = useState<number[]>([]);
     const [versions] = useState<versionsResponse[]>([
-        { version: 'acf' },
-        { version: 'nvi' },
-        { version: 'ra' }
+        { label: 'ACF - Almeida Corrigida Fiel', version: 'acf' },
+        { label: 'NVI - Nova Versão Internacional', version: 'nvi' },
+        { label: 'ARA - Almeida Revista e Atualizada', version: 'ra' }
     ]);
     const [collapsed, setCollapsed] = useState(false || !((selectedVersion || version) && (selectedChapter || chapter) && (selectedNumber || number)));
     const [isFlatListReady, setIsFlatListReady] = useState(false);
@@ -136,7 +136,7 @@ export default function BookDetail() {
     }
 
     return (
-        <View className="flex-1 dark:bg-slate-800">
+        <View className="flex-1 bg-stone-50 dark:bg-slate-800">
             <View className="dark:bg-slate-800 dark:text-white bg-blue-100 mt-8">
                 <View className="flex flex-row justify-between px-3 w-full">
                     <TouchableOpacity
@@ -181,7 +181,7 @@ export default function BookDetail() {
                                     style={{ color: colorScheme === 'dark' ? '#fff' : '#000' }}
                                     dropdownIconColor={colorScheme === 'dark' ? '#fff' : '#000'}>
                                     {versions.map((v) => (
-                                        <Picker.Item key={v.version} label={`Versão ${v.version.toUpperCase()}`} value={v.version} />
+                                        <Picker.Item key={v.version} label={v.label} value={v.version} />
                                     ))}
                                 </Picker>
                             </View>
@@ -200,7 +200,7 @@ export default function BookDetail() {
                             </View>
 
                             {data?.verses && (selectedChapter || chapter) && (
-                                <View className="dark:bg-slate-800 rounded-lg">
+                                <View className="dark:bg-slate-800 bg-blue-100 rounded-lg">
                                     <Picker
                                         selectedValue={selectedNumber}
                                         onValueChange={(itemValue: number) => setSelectedNumber(itemValue)}

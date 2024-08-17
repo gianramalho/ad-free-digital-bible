@@ -9,9 +9,9 @@ import { useColorScheme } from "nativewind";
 export default function SearchScreen() {
     const [version, setVersion] = useState<string>('nvi');
     const [versions] = useState<versionsResponse[]>([
-        { version: 'acf' },
-        { version: 'nvi' },
-        { version: 'ra' }
+        { label: 'ACF - Almeida Corrigida Fiel', version: 'acf' },
+        { label: 'NVI - Nova Versão Internacional', version: 'nvi' },
+        { label: 'ARA - Almeida Revista e Atualizada', version: 'ra' }
     ]);
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState<searchByWordResponse | null>(null);
@@ -35,9 +35,9 @@ export default function SearchScreen() {
     }
 
     return (
-        <View className="flex-1 dark:bg-slate-800">
-            <View className="flex-1 mt-14 p-6">
-                <View className="gap-5">
+        <View className="flex-1 bg-stone-50 dark:bg-slate-800">
+            <View className="flex-1 mt-14 px-1">
+                <View className="gap-5 p-6">
                     <View className="dark:bg-slate-800 dark:border dark:border-blue-100 bg-blue-100 rounded-lg">
                         <Picker
                             selectedValue={version}
@@ -45,7 +45,7 @@ export default function SearchScreen() {
                             style={{ color: colorScheme === 'dark' ? '#fff' : '#000' }}
                             dropdownIconColor={colorScheme === 'dark' ? '#fff' : '#000'}>
                             {versions.map((v) => (
-                                <Picker.Item key={v.version} label={`Versão ${v.version.toUpperCase()}`} value={v.version} />
+                                <Picker.Item key={v.version} label={v.label} value={v.version} />
                             ))}
                         </Picker>
                     </View>

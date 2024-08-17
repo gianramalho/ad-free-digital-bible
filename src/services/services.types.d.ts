@@ -49,5 +49,6 @@ type VerseSearchByWord = {
 }
 
 type versionsResponse = {
+    label: string,
     version: string,
 }
