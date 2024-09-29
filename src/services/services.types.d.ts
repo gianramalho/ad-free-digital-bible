@@ -1,54 +1,62 @@
-type booksResponse = {
-    abbrev: {
-        pt: string,
-        en: string
-    },
-    author: string,
+export type booksResponse = {
+    abbrev: string,
     chapters: string,
-    comment: string,
-    group: string,
     name: string,
     testament: string,
-    version: string
 }
 
-// {
-// 	"abbrev": {
-// 		"pt": "gn",
-// 		"en": "gn"
-// 	},
-// 	"author": "Moisés",
-// 	"chapters": 50,
-// 	"comment": "",
-// 	"group": "Pentateuco",
-// 	"name": "Gênesis",
-// 	"testament": "VT"
-// }
-
-type searchByWordResponse = {
+export type searchByWordResponse = {
     occurrence: number,
     version: string,
     verses: VerseSearchByWord[],
 }
 
-type VerseSearchByWord = {
+export type searchByWordResponseNotFound = {
+    occurrence: number,
+    version: string,
+    verses: [],
+}
+
+export type VerseSearchByWord = {
+    id: number,
     book: {
-        abbrev: {
-            pt: string,
-            en: string,
-        },
-        author: string,
-        chapters: number,
-        group: string,
+        abbrev: string,
         name: string,
-        testament: string
     },
     chapter: number,
     number: number,
     text: string,
 }
 
-type versionsResponse = {
-    label: string,
-    version: string,
+export type versionsDataType = {
+    id: number
+    name: string
+    abbrev: string,
+}
+
+interface Book {
+    abbrev: string;
+    name: string;
+}
+
+interface Verse {
+    id: number;
+    number: number;
+    text: string;
+    isFavorite: boolean,
+    note: string,
+    highlightColor: string
+}
+
+interface ChapterData {
+    book: {
+        abbrev: string;
+        name: string;
+        version: string;
+    };
+    chapter: {
+        number: number;
+        verses: number;
+    };
+    verses: Verse[];
 }

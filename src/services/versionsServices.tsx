@@ -1,33 +1,21 @@
-import ApiService from "@/services/apiService"
+import { useSQLiteContext } from "expo-sqlite";
+import { versionsDataType } from "./services.types";
 
-const apiService = new ApiService();
-const basePath = apiService.getBasePath();
+export function VersionsServices() {
+    const database = useSQLiteContext()
 
-async function getVersions() {
+    async function list() {
+        try {
+            const query = "SELECT * FROM versions";
+            const response = await database.getAllAsync<versionsDataType>(query);
 
-    try {
-        const headers = await apiService.getHeaderApi();
-        const response = await fetch(`${basePath}/versions`, {
-            headers: headers,
-        });
-        
-        const responseData = await response.json();
+            return response;
 
-        if (responseData && Array.isArray(responseData)) {
-            const versions: versionsResponse[] = responseData.map((data: any) => ({
-                version: data.version,
-                verses: data.verses,
-            }));
-
-            return versions;
-        } else {
-            console.error('Erro ao buscar versões: Dados inválidos');
+        } catch (error) {
+            console.error('Erro ao buscar versões:', error);
             return [];
         }
-    } catch (error) {
-        console.error('Erro ao buscar versões:', error);
-        return [];
     }
-}
 
-export { getVersions }
+    return { list }
+}

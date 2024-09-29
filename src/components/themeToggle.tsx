@@ -1,110 +1,64 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
-import { useColorScheme } from "nativewind";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import { saveTheme } from "@/utils/themeUtils";
+import { useLoading } from "@/contexts/loadingContext";
+import { useTheme } from "@/providers/themeProvider";
 
 const ThemeToggle = () => {
-    const { colorScheme, setColorScheme } = useColorScheme();
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [selectedScheme, setSelectedScheme] = useState<"light" | "dark" | "system" | undefined>(colorScheme);
+    const { colorScheme, setColorScheme } = useTheme();
+    const [selectedScheme, setSelectedScheme] = useState<"light" | "dark" | undefined>(colorScheme);
+    const iconColor = colorScheme === "dark" ? "#fff" : "#000";
+    const { setIsLoading } = useLoading();
 
-    useEffect(() => {
-        const loadTheme = async () => {
-            const storedTheme = await AsyncStorage.getItem('colorScheme');
-            if (storedTheme === "light" || storedTheme === "dark" || storedTheme === "system") {
-                setColorScheme(storedTheme);
-                setSelectedScheme(storedTheme);
-            }
-            setIsLoaded(true);
-        };
-        loadTheme();
-    }, []);
-
-    const handleSelect = async (scheme: "light" | "dark" | "system") => {
+    const handleSelect = async (scheme: "light" | "dark") => {
         setIsLoading(true);
         setSelectedScheme(scheme);
-        await AsyncStorage.setItem('colorScheme', scheme);
-        setColorScheme(scheme);
+        const newScheme = colorScheme === 'light' ? 'dark' : 'light';
+        setColorScheme(newScheme);
+        await saveTheme(newScheme);
         setIsLoading(false);
     };
 
-    if (!isLoaded) {
-        return null;
-    }
-
     return (
-        <View className="p-6 mt-14">
-            {isLoading ? (
-                <View className="flex justify-center items-center">
-                    <ActivityIndicator size="large" color={colorScheme === 'dark' ? '#dbeafe' : '#1e293b'} />
-                    <Text className="mt-3 text-xl dark:text-white">Alterando tema...</Text>
-                </View>
-            ) : (
-                <>
-                    <Text className="text-xl mb-3 dark:text-white">Selecionar Tema</Text>
-                    <View className="flex-col divide-y-2 divide-slate-800 dark:divide-white gap-5">
-                        <TouchableOpacity
-                            onPress={() => handleSelect('system')}
-                            className="flex flex-row items-center justify-between">
-                            <View className="flex flex-row gap-3">
-                                <Ionicons
-                                    name={"contrast"}
-                                    size={20}
-                                    color={colorScheme === 'dark' ? '#fff' : '#000'}
-                                />
-                                <Text className="dark:text-white">Automático</Text>
-                            </View>
-                            <Ionicons
-                                name={selectedScheme === 'system' ? "radio-button-on" : "radio-button-off"}
-                                size={24}
-                                color={colorScheme === 'dark' ? '#fff' : '#000'}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => handleSelect('light')}
-                            className="flex flex-row items-center justify-between">
-                            <View className="flex flex-row gap-3">
-                                <Ionicons
-                                    name={"sunny"}
-                                    size={20}
-                                    color={colorScheme === 'dark' ? '#fff' : '#000'}
-                                />
-                                <Text className="dark:text-white">Claro</Text>
-                            </View>
-
-
-                            <Ionicons
-                                name={selectedScheme === 'light' ? "radio-button-on" : "radio-button-off"}
-                                size={24}
-                                color={colorScheme === 'dark' ? '#fff' : '#000'}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => handleSelect('dark')}
-                            className="flex flex-row items-center justify-between">
-                            <View className="flex flex-row gap-3">
-                                <Ionicons
-                                    name={"moon"}
-                                    size={20}
-                                    color={colorScheme === 'dark' ? '#fff' : '#000'}
-                                />
-                                <Text className="dark:text-white">Escuro</Text>
-                            </View>
-
-                            <Ionicons
-                                name={selectedScheme === 'dark' ? "radio-button-on" : "radio-button-off"}
-                                size={24}
-                                color={colorScheme === 'dark' ? '#fff' : '#000'}
-                            />
-                        </TouchableOpacity>
+        <View className="px-6 pb-6">
+            <Text className="text-xl mb-3 dark:text-white">Selecionar Tema</Text>
+            <View className="flex-col divide-y-2 divide-slate-800 dark:divide-white gap-5">
+                <TouchableOpacity
+                    onPress={() => handleSelect('light')}
+                    className="flex flex-row items-center justify-between">
+                    <View className="flex flex-row gap-3">
+                        <Ionicons
+                            name={"sunny"}
+                            size={20}
+                            color={iconColor}
+                        />
+                        <Text className="dark:text-white">Claro</Text>
                     </View>
-                    <Text className="mt-3 text-sm text-gray-500 dark:text-gray-300">
-                        Automático é suportado apenas em sistemas operacionais que permitem controlar o tema em nível de sistema.
-                    </Text>
-                </>
-            )}
+                    <Ionicons
+                        name={selectedScheme === 'light' ? "radio-button-on" : "radio-button-off"}
+                        size={24}
+                        color={iconColor}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => handleSelect('dark')}
+                    className="flex flex-row items-center justify-between">
+                    <View className="flex flex-row gap-3">
+                        <Ionicons
+                            name={"moon"}
+                            size={20}
+                            color={iconColor}
+                        />
+                        <Text className="dark:text-white">Escuro</Text>
+                    </View>
+                    <Ionicons
+                        name={selectedScheme === 'dark' ? "radio-button-on" : "radio-button-off"}
+                        size={24}
+                        color={iconColor}
+                    />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };

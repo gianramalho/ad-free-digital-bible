@@ -1,30 +1,21 @@
 import { View, ScrollView, TouchableOpacity, Text } from "react-native";
 import { useEffect, useState } from "react";
-import { services } from "@/services";
 import { BookItem } from "@/components/bookItem";
-import { Loading } from "@/components/loading";
-import { useColorScheme } from "nativewind";
-import { Ionicons } from "@expo/vector-icons";
+import { booksResponse } from "@/services/services.types";
+import { BooksServices } from "@/services/booksServices";
+import { useLoading } from "@/contexts/loadingContext";
 
 export default function BooksScreen() {
-    const { colorScheme } = useColorScheme();
+    const booksServices = BooksServices()
     const [books, setBooks] = useState<booksResponse[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({
-        'VT': true,
-        'NT': true
-    });
-    const [sections, setSections] = useState<{ title: string, key: string, data: booksResponse[] }[]>([]);
-
-    const toggleSection = (key: string) => {
-        setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }));
-    };
+    const { setIsLoading } = useLoading();
+    const [selectedTestament, setSelectedTestament] = useState<'VT' | 'NT'>('VT');
 
     useEffect(() => {
         const fetchBooks = async () => {
             try {
                 setIsLoading(true);
-                const booksData = await services.books.getBooks();
+                const booksData = await booksServices.list();
                 setBooks(booksData);
             } catch (error) {
                 console.error('Erro ao carregar livros:', error);
@@ -36,53 +27,33 @@ export default function BooksScreen() {
         fetchBooks();
     }, []);
 
-    useEffect(() => {
-        setSections([
-            {
-                title: "Velho Testamento",
-                key: 'VT',
-                data: books.filter(book => book.testament === "VT"),
-            },
-            {
-                title: "Novo Testamento",
-                key: 'NT',
-                data: books.filter(book => book.testament === "NT"),
-            },
-        ]);
-    }, [books]);
-
-    if (isLoading) {
-        return <Loading />;
-    }
+    const filteredBooks = books.filter(book => book.testament === selectedTestament);
 
     return (
-        <View className="flex-1 bg-stone-50 dark:bg-slate-800">
-            <View className="mt-14 px-1">
+        <View className="flex-1 bg-stone-100 dark:bg-slate-800">
+            <View className="flex-1 px-1">
+                <View className="flex flex-row justify-between px-6 pb-6">
+                    <TouchableOpacity className={`w-[49%] rounded-lg p-4 dark:bg-slate-800 dark:border dark:border-gray-500 ${selectedTestament === 'VT' ? 'bg-blue-600 border border-blue-600 dark:bg-blue-100' : 'bg-gray-300 border border-gray-300'}`}
+                        onPress={() => setSelectedTestament('VT')}>
+                        <Text className={`text-center text-base font-bold ${selectedTestament === 'VT' ? 'text-white' : 'text-gray-500'}`}>Velho Testamento</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity className={`w-[49%] rounded-lg p-4 dark:bg-slate-800 dark:border dark:border-gray-500 ${selectedTestament === 'NT' ? 'bg-blue-600 border border-blue-600 dark:bg-blue-100' : 'bg-gray-300 border border-gray-300'}`}
+                        onPress={() => setSelectedTestament('NT')}>
+                        <Text className={`text-center text-base font-bold ${selectedTestament === 'NT' ? 'text-white' : 'text-gray-500'}`}>Novo Testamento</Text>
+                    </TouchableOpacity>
+                </View>
+
                 <ScrollView showsVerticalScrollIndicator={true}>
-                    {sections.map(section => (
-                        <View key={section.key} className="mb-3 p-6">
-                            <TouchableOpacity onPress={() => toggleSection(section.key)}>
-                                <View className="flex flex-row items-center p-3 gap-3">
-                                    <Text className="text-xl font-bold dark:text-white">{section.title}</Text>
-                                    <Ionicons
-                                        name={expandedSections[section.key] ? 'chevron-down' : 'chevron-up'}
-                                        size={25}
-                                        color={colorScheme === 'dark' ? '#fff' : '#000'}
-                                    />
-                                </View>
-                            </TouchableOpacity>
-                            {expandedSections[section.key] && (
-                                <View>
-                                    {section.data.map(book => (
-                                        <BookItem
-                                            key={book.abbrev.pt}
-                                            book={book}
-                                        />
-                                    ))}
-                                </View>
-                            )}
+                    <View className="px-6 pb-6">
+                        <View className="flex flex-col gap-2">
+                            {filteredBooks.map(book => (
+                                <BookItem
+                                    key={book.abbrev}
+                                    book={book}
+                                />
+                            ))}
                         </View>
-                    ))}
+                    </View>
                 </ScrollView>
             </View>
         </View>

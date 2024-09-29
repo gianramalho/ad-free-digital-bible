@@ -2,10 +2,9 @@ import { View, TouchableOpacity, Text, ImageBackground, Image } from "react-nati
 import { router } from 'expo-router';
 import { Ionicons } from "@expo/vector-icons";
 
-
 export default function Home() {
     return (
-        <View className="flex-1 flex-col bg-stone-50 dark:bg-slate-800">
+        <View className="flex-1 flex-col bg-stone-100 dark:bg-slate-800">
             <View className="h-1/3">
                 <ImageBackground
                     source={require("@/assets/background.jpg")}
