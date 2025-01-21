@@ -1,4 +1,5 @@
 export type booksResponse = {
+    id: string,
     abbrev: string,
     chapters: string,
     name: string,
@@ -50,6 +51,7 @@ interface Verse {
 
 interface ChapterData {
     book: {
+        id: string;
         abbrev: string;
         name: string;
         version: string;

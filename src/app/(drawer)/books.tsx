@@ -48,7 +48,7 @@ export default function BooksScreen() {
                         <View className="flex flex-col gap-2">
                             {filteredBooks.map(book => (
                                 <BookItem
-                                    key={book.abbrev}
+                                    key={book.id}
                                     book={book}
                                 />
                             ))}

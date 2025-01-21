@@ -4,6 +4,7 @@ import { useSQLiteContext } from "expo-sqlite";
 
 type VerseSearchByWordResponse = {
     id: number;
+    book_id: string;
     book_abbrev: string;
     book_name: string;
     book_version: string;
@@ -26,6 +27,7 @@ export function VersesServices() {
                 )
                 SELECT 
                     verses_fts.id AS id,
+                    books.id AS book_id,
                     books.abbrev AS book_abbrev,
                     books.name AS book_name,
                     verses_fts.version AS book_version,
@@ -56,6 +58,7 @@ export function VersesServices() {
                 verses: response.map((verse) => ({
                     id: verse.id,
                     book: {
+                        id: verse.book_id,
                         abbrev: verse.book_abbrev,
                         name: verse.book_name,
                     },

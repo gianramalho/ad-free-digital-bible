@@ -2,6 +2,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { ChapterData, booksResponse } from "./services.types";
 
 interface QueryResult {
+    book_id: string;
     book_abbrev: string;
     book_name: string;
     book_version: string;
@@ -21,6 +22,7 @@ export function BooksServices() {
         try {
             const query = `
             SELECT 
+                books.id, 
                 books.abbrev, 
                 books.name, 
                 testaments.abbrev AS testament, 
@@ -40,10 +42,11 @@ export function BooksServices() {
         }
     }
 
-    async function showBookDetails(abbrev: string): Promise<booksResponse | null> {
+    async function showBookDetails(idBook: number): Promise<booksResponse | null> {
         try {
             const query = `
                 SELECT 
+                    books.id, 
                     books.abbrev, 
                     books.name, 
                     testaments.abbrev AS testament, 
@@ -51,11 +54,11 @@ export function BooksServices() {
                 FROM books 
                 JOIN testaments ON books.testament = testaments.id 
                 JOIN verses ON verses.book = books.id       
-                WHERE books.abbrev = ? 
+                WHERE books.id = ? 
                 GROUP BY books.id, testaments.abbrev;
             `;
 
-            const response = await database.getFirstAsync<booksResponse>(query, [abbrev]);
+            const response = await database.getFirstAsync<booksResponse>(query, [idBook]);
 
             return response || null;
 
@@ -65,10 +68,11 @@ export function BooksServices() {
         }
     }
 
-    async function showChapterDetails(version: string, abbrev: string, chapter: number): Promise<ChapterData | null> {
+    async function showChapterDetails(version: string, idBook: number, chapter: number): Promise<ChapterData | null> {
         try {
             const query = `
             SELECT 
+                books.id AS book_id,
                 books.abbrev AS book_abbrev,
                 books.name AS book_name,
                 verses.version AS book_version,
@@ -84,11 +88,11 @@ export function BooksServices() {
             JOIN versions ON verses.version = versions.id
             LEFT JOIN actions ON verses.id = actions.verse_id
             WHERE versions.abbrev = ? 
-              AND books.abbrev = ? 
+              AND books.id = ? 
               AND verses.chapter = ?;
         `;
 
-            const response = await database.getAllAsync<QueryResult>(query, [version, abbrev, chapter]);
+            const response = await database.getAllAsync<QueryResult>(query, [version, idBook, chapter]);
 
             const verses = response.map(row => ({
                 id: row.verse_id,
@@ -101,6 +105,7 @@ export function BooksServices() {
 
             return {
                 book: {
+                    id: response[0].book_id,
                     abbrev: response[0].book_abbrev,
                     name: response[0].book_name,
                     version: response[0].book_version

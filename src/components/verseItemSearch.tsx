@@ -9,6 +9,7 @@ export type VerseItemProps = {
                 pt: string,
                 en: string,
             },
+            id: string,
             author: string,
             chapters: number,
             group: string,
@@ -32,7 +33,7 @@ export function VerseItemSearch({ verse, version }: VerseItemProps & any) {
 
     return (
         <TouchableOpacity className="flex-1 px-6 pb-6"
-            onPress={() => navigateTo(version, verse.book.abbrev, verse.chapter, verse.number)}>
+            onPress={() => navigateTo(version, verse.book.id, verse.chapter, verse.number)}>
             <View className="p-5 bg-white dark:bg-slate-800 rounded-lg dark:border dark:border-blue-100">
                 <Text className="text-xl font-bold mb-1 dark:text-white">{verse.book.name} {verse.chapter}:{verse.number}</Text>
                 <Text className="text-lg dark:text-white">{verse.text}</Text>

@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 
 export type BookProps = {
     book: {
+        id: string,
         abbrev: string,
         chapters: string,
         name: string,
@@ -21,7 +22,7 @@ export function BookItem({ book }: BookProps) {
 
     return (
         <TouchableOpacity className="flex-1"
-        onPress={() => navigateTo(book.abbrev)}>
+        onPress={() => navigateTo(book.id)}>
             <View className={`rounded-lg p-3 dark:bg-slate-800 bg-white dark:border dark:border-blue-100 dark:shadow-none shadow-lg  ${book.testament === 'NT' ? 'shadow-green-200' : 'shadow-blue-200'}`}>
                 <View className="flex flex-row justify-between">
                     <Text className="text-lg font-bold dark:text-white" numberOfLines={1} lineBreakMode="tail">

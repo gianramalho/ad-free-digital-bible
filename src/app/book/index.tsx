@@ -18,14 +18,14 @@ export default function BookDetail() {
     const versesServices = VersesServices()
     const params = useLocalSearchParams<{ version: any, abbrev: any, chapter: any, number: any }>();
     const version = params.version;
-    const abbrev = params.abbrev;
+    const abbrev = Number(params.abbrev);
     const chapter = params.chapter;
     const number = params.number;
     const { colorScheme } = useColorScheme();
     const [selectedVersion, setSelectedVersion] = useState<string>(version || 'nvi');
     const [selectedChapter, setSelectedChapter] = useState<number | undefined>(chapter ? parseInt(chapter) : undefined);
     const [selectedNumber, setSelectedNumber] = useState<number | undefined>(number ? parseInt(number) : undefined);
-    const [selectedBook, setSelectedBook] = useState<string>(abbrev || '');
+    const [selectedBook, setSelectedBook] = useState<number>(abbrev || 0);
     const [books, setBooks] = useState<booksResponse[]>([]);
     const flatListRef = useRef<FlatList<Verse>>(null);
     const { setIsLoading } = useLoading();
@@ -38,7 +38,6 @@ export default function BookDetail() {
     const iconColor = colorScheme === "dark" ? "#fff" : "#000";
     const [selectedVerses, setSelectedVerses] = useState<number[]>([]);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const colorsHighlight = ['bg-blue-400', 'bg-green-400', 'bg-red-400', 'bg-purple-400'];
     const [note, setNote] = useState<string>('');
     const [verse, setVerse] = useState<{ id: number, version: number, testament: number, book: number, chapter: number, verse: number, text: string } | null>(null);
     const colorMapping: Record<'bg-blue-400' | 'bg-green-400' | 'bg-red-400' | 'bg-purple-400', string> = {
@@ -228,7 +227,7 @@ export default function BookDetail() {
         }
     };
 
-    const handleBookChange = (itemValue: string) => {
+    const handleBookChange = (itemValue: number) => {
         setSelectedBook(itemValue);
         setSelectedChapter(undefined);
         setSelectedNumber(undefined);
@@ -277,7 +276,7 @@ export default function BookDetail() {
                             style={{ color: iconColor, width: '100%' }}
                             dropdownIconColor={iconColor}>
                             {books.map((book) => (
-                                <Picker.Item key={book.abbrev} label={book.name} value={book.abbrev} />
+                                <Picker.Item key={book.id} label={book.name} value={book.id} />
                             ))}
                         </Picker>
                     </View>
