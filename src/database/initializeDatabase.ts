@@ -12,8 +12,9 @@ export async function initializeDatabase(database: SQLiteDatabase) {
         return;
     }
 
-    try {
-        await database.execAsync(`
+    setTimeout(async () => {
+        try {
+            await database.execAsync(`
                 CREATE TABLE IF NOT EXISTS "testaments" (
                     "id" INTEGER NOT NULL,
                     "name" VARCHAR(75) NOT NULL,
@@ -155,20 +156,21 @@ export async function initializeDatabase(database: SQLiteDatabase) {
                 CREATE INDEX idx_testaments_id ON testaments(id);
             `);
 
-        await insertNvi(database);
-        await insertAcf(database);
-        await insertRa(database);
+            await insertNvi(database);
+            await insertAcf(database);
+            await insertRa(database);
 
-        await database.execAsync(`
+            await database.execAsync(`
             INSERT INTO verses_fts (id, version, testament, book, chapter, verse, text)
             SELECT id, version, testament, book, chapter, verse, text FROM verses;
         `);
 
-        await AsyncStorage.setItem('isDatabaseInitialized', 'true');
+            await AsyncStorage.setItem('isDatabaseInitialized', 'true');
 
-        console.log("Database initialized successfully.");
-    } catch (error) {
-        console.error("Error initializing database:", error);
-        throw error;
-    }
+            console.log("Database initialized successfully.");
+        } catch (error) {
+            console.error("Error initializing database:", error);
+            throw error;
+        }
+    }, 0);
 }
