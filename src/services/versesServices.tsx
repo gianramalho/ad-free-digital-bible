@@ -1,4 +1,4 @@
-import { useToast } from "react-native-toast-notifications";
+import Toast from 'react-native-toast-message';
 import { searchByWordResponse } from "./services.types";
 import { useSQLiteContext } from "expo-sqlite";
 
@@ -15,7 +15,6 @@ type VerseSearchByWordResponse = {
 
 export function VersesServices() {
     const database = useSQLiteContext()
-    const toast = useToast();
 
     async function searchByWord(version: string, searchTerm: string): Promise<searchByWordResponse | null> {
         try {
@@ -102,11 +101,9 @@ export function VersesServices() {
                 }
             }
 
-            toast.show('Versículo(s) atualizado(s) com sucesso!', {
+            Toast.show({
+                text1: 'Versículo(s) atualizado(s) com sucesso!',
                 type: 'success',
-                placement: 'bottom',
-                duration: 3000,
-                animationType: 'slide-in',
             });
 
         } catch (error) {
@@ -127,11 +124,9 @@ export function VersesServices() {
                 await statement.executeAsync({ $verseId: verseId });
             }
 
-            toast.show('Versículo(s) removido(s) com sucesso!', {
+            Toast.show({
+                text1: 'Versículo(s) removido(s) com sucesso!',
                 type: 'success',
-                placement: 'bottom',
-                duration: 3000,
-                animationType: 'slide-in',
             });
         } catch (error) {
             console.error('Erro ao remover favoritos:', error);
@@ -221,11 +216,9 @@ export function VersesServices() {
                 await insertStatement.executeAsync({ $verseId: verseId, $note: note });
             }
 
-            toast.show('Nota adicionada com sucesso!', {
+            Toast.show({
+                text1: 'Nota adicionada com sucesso!',
                 type: 'success',
-                placement: 'bottom',
-                duration: 3000,
-                animationType: 'slide-in',
             });
 
         } catch (error) {
@@ -246,12 +239,11 @@ export function VersesServices() {
                 await statement.executeAsync({ $verseId: verseId });
             }
 
-            toast.show('Notas removidas com sucesso!', {
+            Toast.show({
+                text1: 'Notas removidas com sucesso!',
                 type: 'success',
-                placement: 'bottom',
-                duration: 3000,
-                animationType: 'slide-in',
             });
+
         } catch (error) {
             console.error('Erro ao remover notas:', error);
         } finally {
@@ -309,12 +301,12 @@ export function VersesServices() {
                 JOIN filtered_versions fv ON verses_fts.version = fv.id
                 WHERE verses_fts.text MATCH ?;
             `;
-    
+
             const planResponse = await database.getAllAsync(queryPlan, [versionAbbrev, searchTerm]);
-    
+
             console.log('Query Plan:', planResponse);
             return planResponse;
-    
+
         } catch (error) {
             console.error('Erro ao obter o plano de consulta:', error);
         }

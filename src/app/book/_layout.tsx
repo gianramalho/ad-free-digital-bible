@@ -5,6 +5,8 @@ import { saveTheme } from '@/utils/themeUtils';
 import { useLoading } from '@/contexts/loadingContext';
 import { Stack, useNavigation } from 'expo-router';
 import { useTheme } from '@/providers/themeProvider';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
 export default function StackLayout() {
     const { colorScheme, setColorScheme } = useTheme();
@@ -23,7 +25,7 @@ export default function StackLayout() {
     }
 
     return (
-        <View className="flex-1">
+        <SafeAreaView className="flex-1">
             <Stack
                 screenOptions={{
                     headerShown: true,
@@ -61,6 +63,7 @@ export default function StackLayout() {
                     headerTintColor: color,
                 }}>
             </Stack>
-        </View>
+            <Toast />
+        </SafeAreaView>
     );
 }

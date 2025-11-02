@@ -45,10 +45,10 @@ export default function BookDetail() {
         'bg-green-400': 'verde',
         'bg-red-400': 'vermelho',
         'bg-purple-400': 'roxo',
-      };
-      
-      const colors: Array<keyof typeof colorMapping> = Object.keys(colorMapping) as Array<keyof typeof colorMapping>;
-      
+    };
+
+    const colors: Array<keyof typeof colorMapping> = Object.keys(colorMapping) as Array<keyof typeof colorMapping>;
+
     const toggleSelection = (verseNumber: number) => {
         if (selectedVerses.includes(verseNumber)) {
             setSelectedVerses(selectedVerses.filter((num) => num !== verseNumber));
@@ -90,7 +90,7 @@ export default function BookDetail() {
                 .filter(text => text.length > 0)
                 .join('\n');
 
-            const fullText = `${book?.name} ${data.chapter.number} - ${selectedVersion.toUpperCase()}\n\n${versesText}`;
+            const fullText = `${book?.name} ${data.chapter.number} - ${selectedVersion.toUpperCase()}\n\n${versesText}\n\nBíblia Sagrada: https://play.google.com/store/apps/details?id=br.com.gianramalho.adfreedigitalbible`;
 
             await Share.share({
                 message: fullText
@@ -254,6 +254,12 @@ export default function BookDetail() {
         }
     }, [selectedBook]);
 
+    const selectedVerseObjects = data?.verses.filter(verse =>
+        selectedVerses.includes(verse.id)
+    );
+
+    const isAnyFavoriteSelected = selectedVerseObjects?.some(verse => verse.isFavorite);
+
     return (
         <View className="flex-1 bg-stone-100 dark:bg-slate-800">
             <View className="bg-blue-100 dark:bg-slate-800 dark:text-white w-full">
@@ -332,12 +338,14 @@ export default function BookDetail() {
             {selectedVerses.length > 0 && (
                 <View className="p-4 dark:bg-slate-900 bg-stone-100 border border-gray-300 rounded-t-lg gap-5">
                     <View className="flex-row justify-around px-10">
-                        <TouchableOpacity
-                            key={"remove"}
-                            onPress={() => handleSaveFavorites("remove")}
-                            className="flex-row items-center justify-center w-8 h-8 rounded-full bg-black">
-                            <Ionicons name="trash" size={20} color="#fff" />
-                        </TouchableOpacity>
+                        {isAnyFavoriteSelected && (
+                            <TouchableOpacity
+                                key={"remove"}
+                                onPress={() => handleSaveFavorites("remove")}
+                                className="flex-row items-center justify-center w-8 h-8 rounded-full bg-black">
+                                <Ionicons name="trash" size={20} color="#fff" />
+                            </TouchableOpacity>
+                        )}
                         {colors.map((color) => (
                             <TouchableOpacity
                                 accessibilityLabel={`Botão de cor ${colorMapping[color]}`}

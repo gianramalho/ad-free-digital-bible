@@ -8,7 +8,7 @@ import { VersionsServices } from "@/services/versionsServices";
 import { Button } from "@/components/Button";
 import { VersesServices } from "@/services/versesServices";
 import { useTheme } from "@/providers/themeProvider";
-import { useToast } from "react-native-toast-notifications";
+import Toast from 'react-native-toast-message';
 
 export default function SearchScreen() {
     const versionsServices = VersionsServices();
@@ -19,15 +19,12 @@ export default function SearchScreen() {
     const [results, setResults] = useState<searchByWordResponse | null>(null);
     const { setIsLoading } = useLoading();
     const { colorScheme } = useTheme();
-    const toast = useToast();
 
     const handleSearch = async () => {
         if (searchTerm.trim() === '') {
-            toast.show('Por favor, digite um termo para buscar.', {
-                type: 'normal',
-                placement: 'bottom',
-                duration: 3000,
-                animationType: 'slide-in',
+            Toast.show({
+                text1: 'Por favor, digite um termo para buscar.',
+                type: 'info',
             });
             return;
         }

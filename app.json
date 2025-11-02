@@ -13,10 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "br.com.gianramalho.adfreedigitalbible"
     },
     "android": {
-      "versionCode": 7,
+      "versionCode": 8,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -27,17 +28,18 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-        "expo-router",
-        [
-          "expo-build-properties",
-          {
-            "android": {
-              "compileSdkVersion": 35,
-              "targetSdkVersion": 35,
-              "buildToolsVersion": "35.0.0"
-            }
+      "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0"
           }
-        ]
+        }
+      ],
+      "expo-font"
     ],
     "extra": {
       "router": {

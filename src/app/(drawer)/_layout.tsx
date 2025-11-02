@@ -5,6 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { saveTheme } from '@/utils/themeUtils';
 import { useLoading } from '@/contexts/loadingContext';
 import { useTheme } from '@/providers/themeProvider';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
 export default function DrawerLayout() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -22,7 +24,7 @@ export default function DrawerLayout() {
         setIsLoading(false);
     }
     return (
-        <View className="flex-1">
+        <SafeAreaView className="flex-1">
             <Drawer
                 screenOptions={{
                     headerShown: true,
@@ -92,6 +94,8 @@ export default function DrawerLayout() {
                 }} />
             </Drawer>
 
+            <Toast />
+
             {/* <Modal
                 transparent={true}
                 animationType="fade"
@@ -110,6 +114,6 @@ export default function DrawerLayout() {
                     </View>
                 </View>
             </Modal> */}
-        </View>
+        </SafeAreaView>
     );
 }
