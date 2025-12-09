@@ -86,6 +86,12 @@ export default function DrawerLayout() {
                         <Ionicons name="person-circle-outline" size={size} color={focused ? '#000' : color} />
                     ),
                 }} />
+                <Drawer.Screen name="donations" options={{
+                    title: 'Doações', headerShown: true,
+                    drawerIcon: ({ focused, size }) => (
+                        <Ionicons name="wallet-outline" size={size} color={focused ? '#000' : color} />
+                    ),
+                }} />
                 <Drawer.Screen name="settings" options={{
                     title: 'Configurações', headerShown: true,
                     drawerIcon: ({ focused, size }) => (

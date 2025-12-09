@@ -17,12 +17,15 @@
       "bundleIdentifier": "br.com.gianramalho.adfreedigitalbible"
     },
     "android": {
-      "versionCode": 8,
+      "versionCode": 11,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "br.com.gianramalho.adfreedigitalbible"
+      "package": "br.com.gianramalho.adfreedigitalbible",
+      "permissions": [
+        "com.android.vending.BILLING"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,11 +38,21 @@
           "android": {
             "compileSdkVersion": 35,
             "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0"
+            "buildToolsVersion": "35.0.0",
+            "kotlinVersion": "2.1.20"
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-iap",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "2.1.20"
+          }
+        }
+      ]
     ],
     "extra": {
       "router": {
